@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package bib;
+
+message Livro {
+    int32 codigo = 1;
+    string nome = 2;
+    string autor = 3;
+    int32 edicao = 4;
+    int32 ano = 5;
+}
+
+message ListaDeLivros {
+    repeated Livro livros = 1;
+}
+
+message UmLivro {
+    Livro livro = 1;
+}
+
+message CodigoLivro {
+    int32 codigo = 1;
+}
+
+message Vazio {}
+
+service Biblioteca {
+    rpc Consultar (Vazio) returns (ListaDeLivros);
+    rpc PesquisarPorCodigo (CodigoLivro) returns (Livro);
+    rpc CadastrarLivro (UmLivro) returns (Vazio);
+}
