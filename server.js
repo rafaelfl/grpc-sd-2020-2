@@ -3,16 +3,6 @@ const PROTO_PATH = "./biblioteca.proto";
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 
-const bd = [
-    {
-        codigo: 123,
-        nome: "Sistemas Distribuídos",
-        autor: "Andrew S. Tanenbaum",
-        edicao: 3,
-        ano: 2007,
-    },
-];
-
 // carregamento do arquivo proto e geração das definições
 const packageDefinition = protoLoader.loadSync(
     PROTO_PATH,
@@ -23,14 +13,26 @@ const packageDefinition = protoLoader.loadSync(
      oneofs: true
     });
 
-var protoDescriptor = grpc.loadPackageDefinition(packageDefinition).bib;
+const protoDescriptor = grpc.loadPackageDefinition(packageDefinition).bib;
+
+const bd = [
+    {
+        codigo: 123,
+        nome: "Sistemas Distribuídos",
+        autor: "Andrew S. Tanenbaum",
+        edicao: 3,
+        ano: 2007,
+    },
+];
 
 const server = new grpc.Server();
 
 server.addService(protoDescriptor.Biblioteca.service, {
+    // deve retornar todos os livros do banco de dados
     Consultar: function(call, callback) {
         callback(null, { livros: bd });
     },
+    // deve retornar o livro que tem o mesmo código passado como parâmetro
     PesquisarPorCodigo: function(call, callback) {
         const codigo = call.request.codigo;
         let resultado = null;
@@ -44,6 +46,7 @@ server.addService(protoDescriptor.Biblioteca.service, {
 
         callback(null, { livro: resultado });
     },
+    // deve cadastrar um novo livro e retornar uma mensagem vazia
     CadastrarLivro: function(call, callback) {
         const livro = call.request.livro;
 

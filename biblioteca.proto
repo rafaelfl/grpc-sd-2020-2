@@ -26,6 +26,6 @@ message Vazio {}
 
 service Biblioteca {
     rpc Consultar (Vazio) returns (ListaDeLivros);
-    rpc PesquisarPorCodigo (CodigoLivro) returns (Livro);
+    rpc PesquisarPorCodigo (CodigoLivro) returns (UmLivro);
     rpc CadastrarLivro (UmLivro) returns (Vazio);
 }
